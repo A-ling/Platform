@@ -2,7 +2,7 @@ import { isUrl } from '../utils/utils';
 
 const menuData = [
   {
-    name: 'brinson',
+    name: 'Dashboard',
     icon: 'dashboard',
     path: 'brinson',
     children: [
@@ -12,7 +12,30 @@ const menuData = [
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
-      
+      {
+        name: 'Brinson归因明细',
+        path: 'detail',
+        // hideInBreadcrumb: true,
+        // hideInMenu: true,
+      },
+      {
+        name: 'Barra多因子归因',
+        path: 'barra',
+        // hideInBreadcrumb: true,
+        // hideInMenu: true,
+      },
+      {
+        name: 'Barra多因子归因明细',
+        path: 'barra_detail',
+        // hideInBreadcrumb: true,
+        // hideInMenu: true,
+      },
+      {
+        name: 'Barra风险分析',
+        path: 'barra_analysis',
+        // hideInBreadcrumb: true,
+        // hideInMenu: true,
+      },
     ],
   },
   // {

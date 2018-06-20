@@ -29,7 +29,7 @@ import Trend from 'components/Trend';
 import NumberInfo from 'components/NumberInfo';
 import { getTimeDistance } from '../../utils/utils';
 import { NavigationBar } from './NavigationBar';
-import styles from './BrinsonList.less';
+import styles from './BarraList.less';
 //var echarts = require('echarts');
 
 const { TabPane } = Tabs;
@@ -43,10 +43,10 @@ const Yuan = ({ children }) => (
   chart,
   loading: loading.effects['chart/fetch'],
 }))
-export default class BrinsonList extends Component {
+export default class BarraList extends Component {
   state = {
     salesType: 'all',
-    currentTabKey: '1',
+    currentTabKey: '3',
     rangePickerValue: getTimeDistance('year'),
   };
 

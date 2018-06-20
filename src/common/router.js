@@ -75,6 +75,30 @@ export const getRouterData = app => {
         import('../routes/Brinson/BrinsonList')
       ),
     },
+    '/brinson/detail':{
+      name:'Brinson归因明细',
+      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
+        import('../routes/Brinson/BrinsonDetail')
+      ),
+    },
+    '/brinson/barra':{
+      name:'Barra多因子归因',
+      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
+        import('../routes/Brinson/BarraList')
+      ),
+    },
+    '/brinson/barra_detail':{
+      name:'Barra多因子归因明细',
+      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
+        import('../routes/Brinson/BarraDetail')
+      ),
+    },
+    '/brinson/barra_analysis':{
+      name:'Barra风险分析',
+      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
+        import('../routes/Brinson/BarraAnalysis')
+      ),
+    },
 
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
