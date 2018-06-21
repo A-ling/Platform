@@ -2,39 +2,29 @@ import { isUrl } from '../utils/utils';
 
 const menuData = [
   {
-    name: 'Dashboard',
+    name: '策略回测绩效归因',
     icon: 'dashboard',
     path: 'brinson',
     children: [
       {
         name: 'Brinson归因',
         path: 'list',
-        // hideInBreadcrumb: true,
-        // hideInMenu: true,
       },
       {
         name: 'Brinson归因明细',
         path: 'detail',
-        // hideInBreadcrumb: true,
-        // hideInMenu: true,
       },
       {
         name: 'Barra多因子归因',
         path: 'barra',
-        // hideInBreadcrumb: true,
-        // hideInMenu: true,
       },
       {
         name: 'Barra多因子归因明细',
         path: 'barra_detail',
-        // hideInBreadcrumb: true,
-        // hideInMenu: true,
       },
       {
         name: 'Barra风险分析',
         path: 'barra_analysis',
-        // hideInBreadcrumb: true,
-        // hideInMenu: true,
       },
     ],
   },
