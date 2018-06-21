@@ -4,7 +4,7 @@ import DocumentTitle from 'react-document-title';
 import { Icon } from 'antd';
 import GlobalFooter from '../components/GlobalFooter';
 import styles from './UserLayout.less';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.jpg';
 import { getRoutes } from '../utils/utils';
 
 const links = [
@@ -35,9 +35,9 @@ class UserLayout extends React.PureComponent {
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
-    let title = 'Ant Design Pro';
+    let title = '综合管理平台';
     if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - Ant Design Pro`;
+      title = `${routerData[pathname].name} - 综合管理平台`;
     }
     return title;
   }
