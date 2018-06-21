@@ -1,34 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import {
-  Row,
-  Col,
-  Icon,
-  Card,
-  Tabs,
-  Table,
-  Radio,
-  DatePicker,
-  Tooltip,
-  Menu,
-  Dropdown,
-} from 'antd';
-import numeral from 'numeral';
-import { Bar } from 'components/Charts';
-import Trend from 'components/Trend';
-import NumberInfo from 'components/NumberInfo';
-import { getTimeDistance } from '../../utils/utils';
+import { Row, Col, Card, Tabs, Table } from 'antd';
 import { NavigationBar } from './NavigationBar';
+// 引入 ECharts 主模块
+import echarts from 'echarts/lib/echarts';
+// 引入柱状图
+import 'echarts/lib/chart/bar';
+// 引入提示框和标题组件
+import 'echarts/lib/component/tooltip';
+import 'echarts/lib/component/title';
 import styles from './BrinsonList.less';
-
-const { TabPane } = Tabs;
-const { RangePicker } = DatePicker;
-
-const Yuan = ({ children }) => (
-  <span
-    dangerouslySetInnerHTML={{ __html: yuan(children) }}
-  /> /* eslint-disable-line react/no-danger */
-);
 
 @connect(({ chart, loading }) => ({
   chart,
@@ -36,14 +17,33 @@ const Yuan = ({ children }) => (
 }))
 export default class BrinsonList extends Component {
   state = {
-    salesType: 'all',
     currentTabKey: '1',
-    rangePickerValue: getTimeDistance('year'),
   };
 
   componentDidMount() {
     this.props.dispatch({
       type: 'chart/fetch',
+    });
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    // 绘制图表
+    myChart.setOption({
+      title: {
+        text: 'ECharts 入门示例',
+      },
+      tooltip: {},
+      xAxis: {
+        data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'],
+      },
+      yAxis: {},
+      series: [
+        {
+          name: '销量',
+          type: 'bar',
+          data: [5, 20, 36, 10, 10, 20],
+        },
+      ],
     });
   }
 
@@ -91,16 +91,125 @@ export default class BrinsonList extends Component {
       },
     ];
 
+    //		DrawConfigurationBar = (xAxisData, configData, stockcrossData) => {
+    //			var dom = document.getElementById('ConfigurationBar');
+    //			var ConfigurationBar = echarts.init(dom);
+    //
+    //			var option = {
+    //				toolbox: {
+    //					show: true,
+    //					x: '90%',
+    //					feature: {
+    //						dataView: {
+    //							show: true,
+    //							readOnly: true
+    //						},
+    //						saveAsImage: {
+    //							show: true,
+    //							name: 'Brinson归因-行业配置等图',
+    //							　　　　excludeComponents: ['toolbox'],
+    //							　　　　pixelRatio: 2
+    //						}
+    //					}
+    //				},
+    //				legend: {
+    //					data: ['行业配置', '选股+交叉']
+    //				},
+    //				itemStyle: {
+    //					color: '#108ee9',
+    //				},
+    //				xAxis: {
+    //					axisLabel: {
+    //						rotate: 45
+    //					},
+    //					data: xAxisData
+    //				},
+    //				yAxis: {},
+    //				series: [{
+    //					name: '行业配置',
+    //					type: 'bar',
+    //					itemStyle: {
+    //						color: '#108ee9'
+    //					},
+    //					data: configData,
+    //					formatter: function(params) {
+    //						for(var i = 0; i < params.length; i++) {
+    //							return params[i].name + '</br>' + params[i].seriesName + ':' + (params[i].value * 100).toFixed(2) + '%';
+    //						}
+    //					}
+    //				}, {
+    //					name: '选股+交叉',
+    //					type: 'bar',
+    //					itemStyle: {
+    //						color: '#C0504D'
+    //					},
+    //					data: stockcrossData,
+    //					formatter: function(params) {
+    //						for(var i = 0; i < params.length; i++) {
+    //							return params[i].name + '</br>' + params[i].seriesName + ':' + (params[i].value * 100).toFixed(2) + '%';
+    //						}
+    //					}
+    //				}]
+    //			};
+    //
+    //			ConfigurationBar.setOption(option);
+    //		};
+    //
+    //		DrawExContributionBar = (xAxisData, yAxisData) => {
+    //			var dom = document.getElementById('ExContributionBar');
+    //			var ExContributionBar = echarts.init(dom);
+    //			var option = {
+    //				tooltip: {
+    //					trigger: 'axis',
+    //					formatter: function(params) {
+    //						for(var i = 0; i < params.length; i++) {
+    //							return params[i].name + '</br>' + params[i].seriesName + ':' + (params[i].value * 100).toFixed(2) + '%';
+    //						}
+    //					}
+    //				},
+    //				toolbox: {
+    //					show: true,
+    //					x: '90%',
+    //					feature: {
+    //						dataView: {
+    //							show: true,
+    //							readOnly: true
+    //						},
+    //						saveAsImage: {
+    //							show: true,
+    //							name: 'Brinson归因-超额贡献图',
+    //							　　　　excludeComponents: ['toolbox'],
+    //							　　　　pixelRatio: 2
+    //						}
+    //					}
+    //				},
+    //				legend: {
+    //					data: ['超额贡献']
+    //				},
+    //				itemStyle: {
+    //					color: '#108ee9',
+    //				},
+    //				xAxis: {
+    //					axisLabel: {
+    //						rotate: 45
+    //					},
+    //					data: xAxisData
+    //				},
+    //				yAxis: {},
+    //				series: [{
+    //					name: '超额贡献',
+    //					type: 'bar',
+    //					data: yAxisData
+    //				}]
+    //			};
+    //			ExContributionBar.setOption(option);
+    //		};
+
     return (
       <Fragment>
         <NavigationBar currentKey={this.state.currentTabKey} />
-        <Card loading={loading} bordered={false}>
-          <div className={styles.salesCard}>
-            <div className={styles.salesBar}>
-              <div id="configurationBar" />
-              <Bar height={295} title="超额贡献" data={brinsonData} />
-            </div>
-          </div>
+        <Card loading={loading} bordered={false} style={{ marginTop: 24 }}>
+          <div id="main" style={{ width: '95%', height: 500 }} />
         </Card>
         <Card loading={loading} bordered={false} style={{ marginTop: 24 }}>
           <Table
