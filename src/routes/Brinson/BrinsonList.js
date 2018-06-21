@@ -16,6 +16,7 @@ import styles from './BrinsonList.less';
 var $ = require("jquery");
 //import exportExcel from '../../utils/exportExcel';
 var exportExcel = require('../../utils/exportExcel');
+var common = require('../../utils/common');
 
 @connect(({ chart, loading }) => ({
   chart,
@@ -27,6 +28,7 @@ export default class BrinsonList extends Component {
     //display1:display1,
   };
 
+
   componentDidMount() {
     this.props.dispatch({
       type: 'chart/fetch',
@@ -36,6 +38,31 @@ export default class BrinsonList extends Component {
         this.displayChart1(indexData,exContribution);
         this.displayChart2(indexData,configData,stockcrossData);
     });
+
+    this.props.dispatch({
+      type: 'chart/getStrategyInfo',
+    }).then(()=>{
+        console.log(this.props.chart.strategyInfo);
+    })
+
+/*
+strategy_id = common.getParamFromURLOrCookie('strategy_id',true);
+  var index_code = common.getParamFromURLOrCookie('index_code',true);
+  var begin_date = common.getParamFromURLOrCookie('begin_date',true);
+  var end_date = common.getParamFromURLOrCookie('end_date',true);
+
+  strategy_id = StrategyInfo.strategy_id;
+    strategy_code = StrategyInfo.strategy_code;
+    strategy_name = StrategyInfo.strategy_name;
+    strategy_version = StrategyInfo.strategy_version;
+*/
+    this.setState({
+      strategy_id: common.getParamFromURLOrCookie('strategy_id',true),
+      index_code : common.getParamFromURLOrCookie('index_code',true),
+      begin_date : common.getParamFromURLOrCookie('begin_date',true),
+      end_date : common.getParamFromURLOrCookie('end_date',true),
+    });
+
   }
 
   componentWillUnmount() {
@@ -181,7 +208,7 @@ displayChart2 = (xAxisData, configData, stockcrossData) => {
   render() {
     
     const { chart, loading } = this.props;
-    const { indexData, exContribution, configData, stockcrossData } = chart;
+    const { indexData, exContribution, configData, stockcrossData,strategyInfo } = chart;
 
     //this.display1(indexData, exContribution);
 
@@ -244,7 +271,18 @@ displayChart2 = (xAxisData, configData, stockcrossData) => {
     return (
       <Fragment>
         <NavigationBar currentKey={this.state.currentTabKey} />
+
         <Card loading={loading} bordered={false} style={{ marginTop: 24 }}>
+          
+            <div className="row bar_title">
+              <div className="col-sm-6">
+                <p>策略：<span>{strategyInfo.strategy_name}</span></p>
+              </div>
+              <div className="col-sm-6">
+                <p>日期：<span>{this.state.begin_date}~{this.state.end_date}</span></p>
+              </div>
+            </div>
+          
           <div>
              <Button type="primary" icon="download" onClick={()=>this.downloadExcel('table1','Brinson归因-超额贡献图')}>导出Excel</Button>
              <Button type="primary" icon="table" style={{ marginLeft: 24 }} onClick={()=>this.scrollToAnchor('table1')}>详细数据</Button>

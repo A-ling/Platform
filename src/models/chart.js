@@ -16,9 +16,12 @@ export default {
     radarData: [],
     loading: false,
     indexData:[],
+    columnsData:[],
     exContribution:[],
     configData:[],
     stockcrossData:[],
+    dataData:[],
+    strategyInfo:{},
   },
 
   effects: {
@@ -36,6 +39,20 @@ export default {
         payload: {
           salesData: response.salesData
         },
+      });
+    },
+    //获取策略
+    *getStrategyInfo(_,{call,put}){
+      yield put({
+        type:'save',
+        payload:{
+          strategyInfo:{
+            "strategy_id": "S0000000000000000000000000000382",
+            "strategy_code": "S0000162",
+            "strategy_name": "PE选股策略",
+            "strategy_version": "1.1.1"
+          }
+        }
       });
     },
   },
@@ -59,10 +76,14 @@ export default {
         salesTypeDataOnline: [],
         salesTypeDataOffline: [],
         radarData: [],
+        loading: false,
         indexData:[],
+        columnsData:[],
         exContribution:[],
         configData:[],
         stockcrossData:[],
+        dataData:[],
+        strategyInfo:{},
       };
     },
   },

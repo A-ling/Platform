@@ -1,59 +1,55 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
-import {
-  Row,
-  Col,
-  Icon,
-  Card,
-  Tabs,
-  Table,
-  Radio,
-  DatePicker,
-  Tooltip,
-  Menu,
-  Dropdown,
-} from 'antd';
-import numeral from 'numeral';
-import {
-  ChartCard,
-  yuan,
-  MiniArea,
-  MiniBar,
-  MiniProgress,
-  Field,
-  Bar,
-  Pie,
-  TimelineChart,
-} from 'components/Charts';
-import Trend from 'components/Trend';
-import NumberInfo from 'components/NumberInfo';
-import { getTimeDistance } from '../../utils/utils';
+import { Row, Col, Card, Tabs, Table, Button, Icon } from 'antd';
 import { NavigationBar } from './NavigationBar';
-import styles from './BrinsonDetail.less';
-//var echarts = require('echarts');
+// 引入 ECharts 主模块
+import echarts from 'echarts/lib/echarts';
+// 引入柱状图
+import 'echarts/lib/chart/bar';
+// 引入提示框和标题组件
+import 'echarts/lib/component/tooltip';
+import 'echarts/lib/component/title';
+import "echarts/lib/component/toolbox";
+require("echarts/lib/component/legendScroll");
+import styles from './BrinsonList.less';
 
-const { TabPane } = Tabs;
-const { RangePicker } = DatePicker;
-
-const Yuan = ({ children }) => (
-  <span dangerouslySetInnerHTML={{ __html: yuan(children) }} /> /* eslint-disable-line react/no-danger */
-);
+var $ = require("jquery");
+//import exportExcel from '../../utils/exportExcel';
+var exportExcel = require('../../utils/exportExcel');
+var common = require('../../utils/common');
 
 @connect(({ chart, loading }) => ({
   chart,
   loading: loading.effects['chart/fetch'],
 }))
-export default class BrinsonDetail extends Component {
+export default class BrinsonList extends Component {
   state = {
-    salesType: 'all',
     currentTabKey: '2',
-    rangePickerValue: getTimeDistance('year'),
+    //display1:display1,
   };
+
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'chart/fetch',
+      type: 'chart/fetch', //获取模拟的data数据
+    }).then(()=>{
+        
     });
+
+    this.props.dispatch({
+      type: 'chart/getStrategyInfo', //获取策略详情：根据策略ID获取策略详情，传入id待解决
+    }).then(()=>{
+        console.log(this.props.chart.strategyInfo);
+    })
+
+    //获取链接中的参数值
+    this.setState({
+      strategy_id: common.getParamFromURLOrCookie('strategy_id',true),
+      index_code : common.getParamFromURLOrCookie('index_code',true),
+      begin_date : common.getParamFromURLOrCookie('begin_date',true),
+      end_date : common.getParamFromURLOrCookie('end_date',true),
+    });
+
   }
 
   componentWillUnmount() {
@@ -63,77 +59,74 @@ export default class BrinsonDetail extends Component {
     });
   }
 
+  //下载
+  // downloadExcel = (id,excelName)=>{
+  //   var tableInnerHtml = $("#"+ id).find("table").html();
+  //   exportExcel.exprotTableHtmlExcel(tableInnerHtml,excelName);
+  // }
+
   render() {
+    
     const { chart, loading } = this.props;
-    const {
-      indexData,
-      exContribution,
-      configData,
-      stockcrossData,
-    } = chart;
+    const { indexData,columnsData, exContribution, configData, stockcrossData, dataData, strategyInfo } = chart;
 
-    const brinsonData = [];//数据 brinson数据
-    for(let i=0;i<indexData.length;i++){
-      brinsonData.push({
-          index:(i+1),
-          x:indexData[i],
-          y:exContribution[i]
-      });
-    }
 
-    const brinsonData2=[]; //行业配置和交叉股
-    for(let i=0;i<indexData.length;i++){
-      brinsonData2.push({
-          index:(i+1),
-          x:indexData[i],
-          y:[configData[i],stockcrossData[i]]
-      });
-    }
-
+    //表头
     const columns = [
       {
-        title: '项目',
-        dataIndex: 'x',
-        key: 'x',
+        title: '行业/项目',
+        dataIndex: 'col0',
+        key: 'col0',
       },
-      {
-        title: '超额贡献',
-        dataIndex: 'y',
-        key: 'y',
-        //sorter: (a, b) => a.count - b.count,
-        className: styles.alignRight,
-      },
-      
     ];
+    for (let i = 0; i < columnsData.length; i++){
+      columns.push({
+        title: columnsData[i],
+        dataIndex: 'col'+(i+1),
+        key: 'col'+(i+1),
+        className: styles.alignRight,
+      });
+    }
+
+    //行数据
+    const brinsonData = [];
+    for (let i = 0; i < indexData.length; i++) {
+        var item = {};
+        item["index"] = i;
+        item["col0"] = indexData[i]
+        for (let j = 0; j < columnsData.length; j++){
+          item["col"+(j+1)] = dataData[i][j];
+        }
+        brinsonData.push(item);
+    }
 
     return (
       <Fragment>
-         
-        <NavigationBar currentKey={this.state.currentTabKey}/>
-        <Card loading={loading} bordered={false}>
-        <div className={styles.salesCard}>
-          <div className={styles.salesBar}>
-            <div id="configurationBar"></div>
-            <Bar height={295} title="超额贡献" data={brinsonData} />
-          </div>
-           </div>
+        <NavigationBar currentKey={this.state.currentTabKey} />
+
+        <Card loading={loading} bordered={false} style={{ marginTop: 24 }}>
+            <div className="row bar_title">
+                <div className="col-sm-6">
+                  <p>策略：<span>{strategyInfo.strategy_name}</span></p>
+                </div>
+                <div className="col-sm-6">
+                  <p>日期：<span>{this.state.begin_date}~{this.state.end_date}</span></p>
+                </div>
+              </div>
+          <Table
+            rowKey={record => record.index}
+            size="small"
+            columns={columns}
+            dataSource={brinsonData}
+            pagination={{
+              style: { marginBottom: 0 },
+              pageSize: 100,
+            }}
+
+            id="table1"
+          />
         </Card>
-          <Card
-            loading={loading}
-            bordered={false}
-            style={{ marginTop: 24 }} >
-            <Table
-              rowKey={record => record.index}
-              size="small"
-              columns={columns}
-              dataSource={brinsonData}
-              pagination={{
-                style: { marginBottom: 0 },
-                pageSize:100,
-              }}
-            />
-          </Card>
-         
+
       </Fragment>
     );
   }

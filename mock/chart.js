@@ -163,10 +163,12 @@ const BrinsonData = {
 	],
 };
 
-const indexData = BrinsonData.index;
+const indexData = BrinsonData.index;//行
+const columnsData = BrinsonData.columns;//列
 const exContribution = []; //超额贡献
 const configData = []; // 行业配置
 const stockcrossData = []; //选股+交叉
+const dataData=BrinsonData.data; //交叉数据
 
 for(let i = 0; i < BrinsonData.data.length; i++) {
 	for(let j = 0; j < BrinsonData.columns.length; j++) {
@@ -369,9 +371,11 @@ export const getFakeChartData = {
 	salesTypeDataOffline,
 	radarData,
 	indexData,
+	columnsData,
 	exContribution,
 	configData,
 	stockcrossData,
+	dataData,
 };
 
 export default {
