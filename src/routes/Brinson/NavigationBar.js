@@ -31,11 +31,9 @@ export class NavigationBar extends Component{
 	    }else if(key == "5"){
 	    	url = '#/brinson/barra_analysis';
 	    }else{
-	    	console.log("warn:"+key);
+	    	console.warn("自定义消息-NavigationBar Tab's key is invalid:"+key);
 	    	return;
 	    }
-	    
-	    console.log("warn:"+key+",url:"+url);
 	    window.location.href = window.location.origin + url;
   };
 	render(){
