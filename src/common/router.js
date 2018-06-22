@@ -69,32 +69,44 @@ function getFlatMenuData(menus) {
 
 export const getRouterData = app => {
   const routerConfig = {
-    '/brinson/list':{
-      name:'Brinson归因',
+    '/factor/message': {
+      name: '单因子信息管理',
+      component: dynamicWrapper(app, ['project', 'activities'], () =>
+        import('../routes/Factor/FactorMessage')
+      ),
+    },
+    '/factor/check': {
+      name: '单因子检验',
+      component: dynamicWrapper(app, ['project', 'activities'], () =>
+        import('../routes/Factor/FactorCheck')
+      ),
+    },
+    '/brinson/list': {
+      name: 'Brinson归因',
       component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
         import('../routes/Brinson/BrinsonList')
       ),
     },
-    '/brinson/detail':{
-      name:'Brinson归因明细',
+    '/brinson/detail': {
+      name: 'Brinson归因明细',
       component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
         import('../routes/Brinson/BrinsonDetail')
       ),
     },
-    '/brinson/barra':{
-      name:'Barra多因子归因',
+    '/brinson/barra': {
+      name: 'Barra多因子归因',
       component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
         import('../routes/Brinson/BarraList')
       ),
     },
-    '/brinson/barra_detail':{
-      name:'Barra多因子归因明细',
+    '/brinson/barra_detail': {
+      name: 'Barra多因子归因明细',
       component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
         import('../routes/Brinson/BarraDetail')
       ),
     },
-    '/brinson/barra_analysis':{
-      name:'Barra风险分析',
+    '/brinson/barra_analysis': {
+      name: 'Barra风险分析',
       component: dynamicWrapper(app, ['project', 'activities', 'chart'], () =>
         import('../routes/Brinson/BarraAnalysis')
       ),
@@ -203,7 +215,6 @@ export const getRouterData = app => {
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
-
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());
